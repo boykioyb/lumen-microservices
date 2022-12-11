@@ -1,0 +1,4 @@
+<?php
+return [
+    'THROTTLE_LIMIT_AUTHSERVICE' => env('THROTTLE_LIMIT_AUTHSERVICE', 60)
+];

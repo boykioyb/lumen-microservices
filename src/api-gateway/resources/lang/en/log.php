@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'success'                     => 'Thành công',
+    'log_manager'                 => 'Log Manager',
+    'log_manager_description'     => 'Log Manager Description',
+    'existing_logs'               => 'Existing Logs',
+    'number'                      => 'Number',
+    'file_name'                   => 'File Name',
+    'actions'                     => 'Actions',
+    'file_size'                   => 'File Size',
+    'last_modified'               => 'Last Modified',
+    'date'                        => 'Date',
+    'preview'                     => 'Preview',
+    'download'                    => 'Download',
+    'delete'                      => 'Delete',
+    'back_to_all_logs'            => 'Back To All Logs',
+    'delete_confirm'              => 'Delete Confirm?',
+    'delete_cancel_title'         => 'Delete Cancel Title',
+    'delete_error_title'          => 'Delete Error Title',
+    'delete_confirmation_title'   => 'Delete Confirmation Title',
+    'delete_confirmation_message' => 'Delete Confirmation Message',
+    'delete_error_message'        => 'Delete Error Message',
+    'delete_cancel_message'       => 'Delete Cancel Message',
+];

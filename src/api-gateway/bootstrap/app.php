@@ -5,8 +5,8 @@ require_once __DIR__.'/../vendor/autoload.php';
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
     dirname(__DIR__)
 ))->bootstrap();
-
-date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
+//app('translator')->setLocale('vi');
+date_default_timezone_set(env('APP_TIMEZONE', 'Asia/Ho_Chi_Minh'));
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +19,7 @@ date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
 |
 */
 
-$app = new \Dusterio\LumenPassport\Lumen7Application(
+$app = new \Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
@@ -61,6 +61,8 @@ $app->singleton(
 
 $app->configure('app');
 $app->configure('auth');
+$app->configure('system');
+$app->configure('service');
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -78,6 +80,7 @@ $app->configure('auth');
 
  $app->routeMiddleware([
      'auth' => App\Http\Middleware\Authenticate::class,
+     'client' => \Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
  ]);
 
 /*
@@ -91,11 +94,12 @@ $app->configure('auth');
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
+ $app->register(App\Providers\AppServiceProvider::class);
  $app->register(App\Providers\AuthServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
+ $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Laravel\Passport\PassportServiceProvider::class);
-$app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
+$app->register(\App\Providers\Passport\LumenPassportServiceProvider::class);
+$app->register(Irazasyed\Larasupport\Providers\ArtisanServiceProvider::class);
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
@@ -113,5 +117,4 @@ $app->router->group([
     require __DIR__.'/../routes/web.php';
 });
 
-\Dusterio\LumenPassport\LumenPassport::routes($app, ['prefix' => 'v1/oauth']);
 return $app;

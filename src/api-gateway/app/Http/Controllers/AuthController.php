@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,12 +31,20 @@ class AuthController extends Controller
         ]);
 
         $credentials = $request->only(['email', 'password']);
-//        dd(Auth::attempt($credentials));
-        if (!$token = Auth::attempt($credentials)) {
+        $user = User::query()->whereEmail($credentials['email'])->first();
+        if (!$user){
+            return response()->json(['error' => 'User not exist'], 404);
+        }
+        if (!Hash::check($credentials['password'], $user->password)){
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-
-        return $this->respondWithToken($token);
+        $createToken = $user->createToken('api');
+        $user->token = $createToken->accessToken;
+        $user->expires_at = $createToken->token->expires_at;
+//        if (!$token = Auth::attempt($credentials)) {
+//            return response()->json(['error' => 'Unauthorized'], 401);
+//        }
+        return response_success(new UserResource($user));
     }
 
     public function register(Request $request){

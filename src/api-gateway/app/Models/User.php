@@ -30,4 +30,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $hidden = [
         'password',
     ];
+    public $casts = [
+        'created_at' => 'immutable_datetime'
+    ];
 }

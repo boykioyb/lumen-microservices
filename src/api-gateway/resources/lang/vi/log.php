@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'success'                     => 'Thành công',
+    'log_manager'                 => 'Quản lý hoạt động của hệ thống',
+    'log_manager_description'     => 'Miêu tả hoạt động',
+    'existing_logs'               => 'Các thông tin hoạt động',
+    'number'                      => 'Số thứ tự',
+    'file_name'                   => 'Tên file',
+    'actions'                     => 'Thao tác',
+    'file_size'                   => 'Dung lượng',
+    'last_modified'               => 'Lần thao tác gần nhất',
+    'date'                        => 'Ngày tạo',
+    'preview'                     => 'Xem',
+    'download'                    => 'Tải xuống',
+    'delete'                      => 'Xóa',
+    'back_to_all_logs'            => 'Quay về toàn bộ danh sách file log',
+    'delete_confirm'              => 'Bạn thực thự muốn xóa file này?',
+    'delete_cancel_title'         => 'Hủy thao tác',
+    'delete_error_title'          => 'Lỗi',
+    'delete_confirmation_title'   => 'Thành công',
+    'delete_confirmation_message' => 'Xóa file thành công',
+    'delete_error_message'        => 'Có lỗi xảy ra khi xóa file',
+    'delete_cancel_message'       => 'Hủy thao tác xóa file',
+];

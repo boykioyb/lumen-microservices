@@ -16,3 +16,9 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+$router->group([
+    'prefix' => 'v1'
+], function () use ($router){
+    $router->get('getUser', 'UserController@getUser');
+});

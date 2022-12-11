@@ -1,0 +1,153 @@
+version: '3.8'
+services:
+  webserver:
+    image: nginx:alpine
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8080:80"
+      - "443:443"
+    volumes:
+      - ./src/api-gateway/:/var/www/api-gateway
+      - ./src/user-service/:/var/www/user-service
+      - ./src/product-service/:/var/www/product-service
+      - ./src/post-service/:/var/www/post-service
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/sites/:/etc/nginx/conf.d/
+      - ./docker/nginx/ssl/:/etc/ssl/
+      - ./docker/nginx/log:/var/log/nginx/
+    networks:
+      - app-network
+
+  api-gateway:
+    build:
+      context: src/api-gateway
+      dockerfile: Dockerfile
+    image: digitalocean.com/php
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: api-gateway
+      SERVICE_TAGS: dev
+    working_dir: /var/www/api-gateway
+    volumes:
+      - ./src/api-gateway/:/var/www/api-gateway
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - app-network
+  user-service:
+    build:
+      context: src/user-service
+      dockerfile: Dockerfile
+    image: digitalocean.com/php
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: user-service
+      SERVICE_TAGS: dev
+    working_dir: /var/www/user-service
+    volumes:
+      - ./src/user-service/:/var/www/user-service
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - app-network
+
+  product-service:
+    build:
+      context: src/product-service
+      dockerfile: Dockerfile
+    image: digitalocean.com/php
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: product-service
+      SERVICE_TAGS: dev
+    working_dir: /var/www/product-service
+    volumes:
+      - ./src/product-service/:/var/www/product-service
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - app-network
+  post-service:
+    build:
+      context: src/post-service
+      dockerfile: Dockerfile
+    image: digitalocean.com/php
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: post-service
+      SERVICE_TAGS: dev
+    working_dir: /var/www/post-service
+    volumes:
+      - ./src/post-service/:/var/www/post-service
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - app-network
+  user-db:
+    image: mysql:8.0
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "33060:3306"
+    environment:
+      MYSQL_DATABASE: user_db
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: boykioyb
+      MYSQL_PASSWORD: 123456Aa@
+      MYSQL_ROOT_HOST: '%'
+    volumes:
+      - ./docker/mysql/user-db/data:/var/lib/mysql/
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - app-network
+
+  product-db:
+    image: mysql:8.0
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "33061:3306"
+    environment:
+      MYSQL_DATABASE: product_db
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: boykioyb
+      MYSQL_PASSWORD: 123456Aa@
+      MYSQL_ROOT_HOST: '%'
+    volumes:
+      - ./docker/mysql/product-db/data:/var/lib/mysql/
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - app-network
+  post-db:
+    image: mysql:8.0
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "33062:3306"
+    environment:
+      MYSQL_DATABASE: post_db
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: boykioyb
+      MYSQL_PASSWORD: 123456Aa@
+      MYSQL_ROOT_HOST: '%'
+    volumes:
+      - ./docker/mysql/post-db/data:/var/lib/mysql/
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - app-network
+
+  redis:
+    image: "redis:alpine"
+    command: redis-server --requirepass sOmE_sEcUrE_pAsS
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./docker/redis/redis-data:/var/lib/redis
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_REPLICATION_MODE=master
+
+networks:
+  app-network:
+    driver: bridge

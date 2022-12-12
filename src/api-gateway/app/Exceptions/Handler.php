@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use App\Services\Http\HttpResponseErrorCode;
+use App\Services\Http\HttpStatusCode;
 use Throwable;
 
 class Handler extends ExceptionHandler

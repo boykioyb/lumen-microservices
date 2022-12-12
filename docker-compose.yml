@@ -20,6 +20,7 @@ services:
       - app-network
 
   api-gateway:
+    container_name: api-gateway
     build:
       context: src/api-gateway
       dockerfile: Dockerfile
@@ -35,7 +36,13 @@ services:
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       - app-network
+    links:
+      - webserver
+      - user-service
+    depends_on:
+      - user-db
   user-service:
+    container_name: user-service
     build:
       context: src/user-service
       dockerfile: Dockerfile
@@ -51,8 +58,11 @@ services:
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       - app-network
+    depends_on:
+      - user-db # link den container
 
   product-service:
+    container_name: product-service
     build:
       context: src/product-service
       dockerfile: Dockerfile
@@ -68,7 +78,10 @@ services:
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       - app-network
+    depends_on:
+      - product-db
   post-service:
+    container_name: post-service
     build:
       context: src/post-service
       dockerfile: Dockerfile
@@ -84,7 +97,10 @@ services:
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       - app-network
+    depends_on:
+      - post-db
   user-db:
+    container_name: user-db
     image: mysql:8.0
     restart: unless-stopped
     tty: true
@@ -103,6 +119,7 @@ services:
       - app-network
 
   product-db:
+    container_name: product-db
     image: mysql:8.0
     restart: unless-stopped
     tty: true
@@ -120,6 +137,7 @@ services:
     networks:
       - app-network
   post-db:
+    container_name: post-db
     image: mysql:8.0
     restart: unless-stopped
     tty: true
@@ -138,6 +156,7 @@ services:
       - app-network
 
   redis:
+    container_name: redis
     image: "redis:alpine"
     command: redis-server --requirepass sOmE_sEcUrE_pAsS
     ports:
@@ -150,4 +169,5 @@ services:
 
 networks:
   app-network:
-    driver: bridge
+    name: app-network
+    external: true

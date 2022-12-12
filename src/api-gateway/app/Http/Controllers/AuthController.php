@@ -8,13 +8,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
 
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
     /**
@@ -39,6 +40,8 @@ class AuthController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
         $createToken = $user->createToken('api');
+        $user->last_logged_in = Carbon::now();
+        $user->save();
         $user->token = $createToken->accessToken;
         $user->expires_at = $createToken->token->expires_at;
 //        if (!$token = Auth::attempt($credentials)) {

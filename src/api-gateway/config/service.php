@@ -4,6 +4,9 @@ return [
     'user' => [
         'url' => 'http://user-service/'
     ],
+    'notify' => [
+        'url' => 'http://notify-service/'
+    ],
     'payment' => [
         'url' => 'http://payment-service/'
     ],

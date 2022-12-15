@@ -91,6 +91,28 @@ services:
       - "5003:80"
     extra_hosts:
       - 'host.docker.internal:host-gateway'
+  notify-service:
+    container_name: notify-service
+    build:
+      context: src/notify-service
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: notify-service
+      SERVICE_TAGS: dev
+    working_dir: /var/www/html
+    volumes:
+      - ./src/notify-service/:/var/www/html
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - app-network
+    depends_on:
+      - user-db # link den container
+    ports:
+      - "5004:80"
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
   user-db:
     container_name: user-db
     image: mysql:8.0

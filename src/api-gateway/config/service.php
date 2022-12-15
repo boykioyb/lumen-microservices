@@ -2,7 +2,7 @@
 
 return [
     'user' => [
-        'url' => 'http://user-service.test/'
+        'url' => 'http://localhost:5001/'
     ],
     'payment' => [
         'url' => 'http://payment-service.test/'

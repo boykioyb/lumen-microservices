@@ -21,7 +21,7 @@ services:
     depends_on:
       - user-db
     extra_hosts:
-      - "172.17.0.1:172.17.0.1"
+      - 'host.docker.internal:host-gateway'
     ports:
       - "5000:8080"
   user-service:
@@ -34,16 +34,18 @@ services:
     environment:
       SERVICE_NAME: user-service
       SERVICE_TAGS: dev
-    working_dir: /var/www/user-service
+    working_dir: /var/www/html
     volumes:
-      - ./src/user-service/:/var/www/user-service
+      - ./src/user-service/:/var/www/html
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       - app-network
     depends_on:
       - user-db # link den container
     ports:
-      - "5001:8080"
+      - "5001:80"
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
 
   product-service:
     container_name: product-service
@@ -55,16 +57,18 @@ services:
     environment:
       SERVICE_NAME: product-service
       SERVICE_TAGS: dev
-    working_dir: /var/www/product-service
+    working_dir: /var/www/html
     volumes:
-      - ./src/product-service/:/var/www/product-service
+      - ./src/product-service/:/var/www/html
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       - app-network
     depends_on:
       - product-db
     ports:
-      - "5002:8080"
+      - "5002:80"
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
   post-service:
     container_name: post-service
     build:
@@ -75,16 +79,18 @@ services:
     environment:
       SERVICE_NAME: post-service
       SERVICE_TAGS: dev
-    working_dir: /var/www/post-service
+    working_dir: /var/www/html
     volumes:
-      - ./src/post-service/:/var/www/post-service
+      - ./src/post-service/:/var/www/html
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       - app-network
     depends_on:
       - post-db
     ports:
-      - "5003:8080"
+      - "5003:80"
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
   user-db:
     container_name: user-db
     image: mysql:8.0

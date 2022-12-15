@@ -76,7 +76,7 @@ RUN composer install --optimize-autoloader --no-interaction --no-progress
 # Set /storage /public permission to public
 RUN chmod -R 777 storage/ public/
 
-EXPOSE 8080
+EXPOSE 80
 
 # Let supervisord start nginx & php-fpm
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

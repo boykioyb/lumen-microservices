@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class GatewayController extends Controller
 {
@@ -11,7 +12,7 @@ class GatewayController extends Controller
     public function handle($serviceName, Request $request)
     {
         try {
-            $fullUrl = $request->fullUrl();
+            $fullUrl = $request->path();
             [$serviceName] = explode('/', $serviceName);
             $url = substr($fullUrl, strrpos($fullUrl, $serviceName) + strlen($serviceName) + 1);
             $service = config('service.' . $serviceName . '.url') ?? null;
@@ -50,7 +51,9 @@ class GatewayController extends Controller
 
             return response()->json($responseData, $response->getStatusCode());
         } catch (\Exception $exception) {
-            dd($exception);
+            Log::error("[API-GATEWAY] error: ", [
+                'trace' => $exception
+            ]);
             return response_error();
         }
     }

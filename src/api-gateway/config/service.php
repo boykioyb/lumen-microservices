@@ -2,15 +2,15 @@
 
 return [
     'user' => [
-        'url' => 'http://localhost:5001/'
+        'url' => 'http://user-service/'
     ],
     'payment' => [
-        'url' => 'http://payment-service.test/'
+        'url' => 'http://payment-service/'
     ],
     'product' => [
-        'url' => 'http://product-service.test/'
+        'url' => 'http://product-service/'
     ],
     'post' => [
-        'url' => 'http://post-service.test/'
+        'url' => 'http://post-service/'
     ],
 ];

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Procedures\UserProcedure;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,3 +20,7 @@ Route::get('/', function () {
 Route::prefix('v1')->group(function () {
     Route::get('getUser', [\App\Http\Controllers\UserController::class, 'getUser']);
 });
+
+Route::rpc('/v1/endpoint', [
+    UserProcedure::class
+])->name('rpc.endpoint');

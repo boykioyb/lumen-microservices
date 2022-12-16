@@ -21,6 +21,7 @@ RUN apk add --no-cache \
   php81-mysqli \
   php81-pdo \
   php81-pdo_mysql \
+  php81-fileinfo \
   php81-redis \
   php81-opcache \
   php81-openssl \

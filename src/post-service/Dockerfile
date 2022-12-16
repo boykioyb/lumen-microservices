@@ -21,6 +21,7 @@ RUN apk add --no-cache \
   php81-mysqli \
   php81-pdo \
   php81-pdo_mysql \
+  php81-fileinfo \
   php81-redis \
   php81-opcache \
   php81-openssl \
@@ -76,7 +77,7 @@ RUN composer install --optimize-autoloader --no-interaction --no-progress
 # Set /storage /public permission to public
 RUN chmod -R 777 storage/ public/
 
-EXPOSE 80
+EXPOSE 8080
 
 # Let supervisord start nginx & php-fpm
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

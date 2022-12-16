@@ -1,11 +1,14 @@
-composer i --working-dir=./src/api-gateway &&
-composer i --working-dir=./src/payment-service &&
-composer i --working-dir=./src/post-service &&
-composer i --working-dir=./src/product-service &&
-composer i --working-dir=./src/user-service
+docker exec -u root -it user-service chown -R nobody:nobody .
+docker exec -u root -it user-service chmod -R 777 storage/ public/
 
-cp ./src/api-gateway/.env.example ./src/api-gateway/.env &&
-cp ./src/payment-service/.env.example ./src/payment-service/.env &&
-cp ./src/post-service/.env.example ./src/post-service/.env &&
-cp ./src/product-service/.env.example ./src/product-service/.env &&
-cp ./src/user-service/.env.example ./src/user-service/.env
+docker exec -u root -it notify-service chown -R nobody:nobody .
+docker exec -u root -it notify-service chmod -R 777 storage/ public/
+
+# docker exec -u root -it payment-service chown -R nobody:nobody .
+# docker exec -u root -it payment-service chmod -R 777 storage/ public/
+
+docker exec -u root -it post-service chown -R nobody:nobody .
+docker exec -u root -it post-service chmod -R 777 storage/ public/
+
+docker exec -u root -it product-service chown -R nobody:nobody .
+docker exec -u root -it product-service chmod -R 777 storage/ public/

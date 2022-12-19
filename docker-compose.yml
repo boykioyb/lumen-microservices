@@ -178,6 +178,41 @@ services:
       - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
     environment:
       - REDIS_REPLICATION_MODE=master
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "test:1:1"
+    networks:
+      - app-network
+    depends_on:
+      - zookeeper
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    networks:
+      - app-network
+  kafka-manager:
+    image: sheepkiller/kafka-manager
+    ports:
+      - "9005:9000"
+    volumes:
+      - ./kafka-manager-conf:/opt/kafka-manager/conf
+      - ./kafka-manager-logs:/opt/kafka-manager/logs
+    depends_on:
+      - kafka
+      - zookeeper
+    environment:
+      APPLICATION_SECRET: "randomstring"
+      ZK_HOSTS: "zookeeper:2181"
+    networks:
+      - app-network
 networks:
   app-network:
     driver: bridge

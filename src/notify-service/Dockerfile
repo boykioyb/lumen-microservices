@@ -1,4 +1,4 @@
-ARG ALPINE_VERSION=3.16
+ARG ALPINE_VERSION=edge
 FROM alpine:${ALPINE_VERSION}
 LABEL Maintainer="Tim de Pater <code@trafex.nl>"
 LABEL Description="Lightweight container with Nginx 1.22 & PHP 8.1 based on Alpine Linux."
@@ -6,10 +6,22 @@ LABEL Description="Lightweight container with Nginx 1.22 & PHP 8.1 based on Alpi
 WORKDIR /var/www/html
 COPY . /var/www/html
 
-# Install packages and remove default server definition
+ARG LIBRDKAFKA_GIT_SHA1=1f7417d4796e036b8c19f17373f8290ff5c7561f
 RUN apk add --no-cache \
+  autoconf \
+  build-base \
+  freetype-dev \
+  libjpeg-turbo-dev \
+  libpng-dev \
+  libtool \
+  libxml2-dev \
+  pkgconf \
+  re2c \
+  git \
   curl \
+  bash \
   nginx \
+  librdkafka \ 
   php81 \
   php81-ctype \
   php81-curl \
@@ -21,7 +33,6 @@ RUN apk add --no-cache \
   php81-mysqli \
   php81-pdo \
   php81-pdo_mysql \
-  php81-fileinfo \
   php81-redis \
   php81-opcache \
   php81-openssl \
@@ -32,10 +43,25 @@ RUN apk add --no-cache \
   php81-sodium \
   php81-tokenizer \
   php81-xmlwriter \
-  supervisor
+  php81-fileinfo \
+  php81-zip \
+  php81-pear \
+  php81-dev \
+  supervisor && \
+  git clone -o ${LIBRDKAFKA_GIT_SHA1} https://github.com/edenhill/librdkafka.git /tmp/librdkafka && \
+  cd /tmp/librdkafka/ && \
+  ./configure && \
+  make && \
+  make install
 
+# RUN ln -s /usr/bin/php81 /usr/bin/php
+
+ARG PHPCONF_PATH=/etc/php81/conf.d
+ARG RDKAFKA_PHP_GIT_SHA1=abd6b6add8e0b983c27245a59981a9a4b5389139
+RUN apk add --update --no-cache pcre-dev && \
+  pecl install rdkafka && \
+  echo "extension=rdkafka.so" > ${PHPCONF_PATH}/rdkafka.ini
 # Create symlink so programs depending on `php` still function
-RUN ln -s /usr/bin/php81 /usr/bin/php
 
 # Configure nginx
 COPY deployment/nginx.conf /etc/nginx/nginx.conf
@@ -81,4 +107,3 @@ EXPOSE 8080
 
 # Let supervisord start nginx & php-fpm
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
-
